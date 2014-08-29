@@ -21,7 +21,7 @@ end
 
 def main_menu
   header
-  puts "Welcome the Survey system"
+  puts "Welcome the Survey System"
   puts "Enter 1 if you are a survey designer"
   puts "Enter 2 if you are a survey taker"
   puts "Enter x to exit the system"
@@ -46,6 +46,9 @@ def designer_menu
   puts "Enter 1 to create a new survey."
   puts "Enter 2 to create new questions."
   puts "Enter 3 to create new responses."
+  puts "Enter 4 to list all surveys."
+  puts "Enter 5 to list all questions."
+  puts "Enter 6 to list all responses."
   puts "Press m to return to the main menu."
   puts "Enter x to exit the system"
 
@@ -56,6 +59,21 @@ def designer_menu
     create_question
   when '3'
     create_response
+  when '4'
+    list_surveys
+    gets.chomp
+    puts "Press any key to continue."
+    designer_menu
+  when '5'
+    list_questions
+    gets.chomp
+    puts "Press any key to continue."
+    designer_menu
+  when '6'
+    list_responses
+    gets.chomp
+    puts "Press any key to continue."
+    designer_menu
   when 'm'
     main_menu
   when 'x'
