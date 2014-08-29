@@ -221,39 +221,34 @@ def taker_menu
   puts "Survey Taker Menu"
   whitespace
 
-  if @current_survey_taker == nil
-    puts "Please enter your name:"
-    @current_survey_taker = SurveyTaker.find_or_create_by(name: gets.chomp)
+  puts "Please enter your name:"
+  current_survey_taker = SurveyTaker.find_or_create_by(name: gets.chomp)
+  puts "Choose a survey to take:"
+  list_surveys
+  chosen_survey = gets.chomp
+  taker_chosen_survey = Survey.find(chosen_survey)
+  Question.all.where(survey_id: taker_chosen_survey.id).each do |question|
+    puts "#{question.name}"
+    Response.all.where(question_id: question.id).each do |response|
+      puts "#{response.id}. #{response.name}"
+    end
+    puts "Enter the number of your choice:"
+    taker_response = gets.chomp
+    SurveyResponse.new(survey_taker_id: current_survey_taker.id, survey_id: taker_chosen_survey.id, question_id: question.id, response_id: taker_response)
+    puts "Response recorded!\n\n"
   end
+  puts "Survey completed!\n\n"
+  puts "Press a to take another survey."
+  puts "Press m to return to the main menu."
+  puts "Press x to exit."
 
-  if @current_survey_taker != nil
-    puts "Choose a survey to take:"
-    list_surveys
-    chosen_survey = gets.chomp
-    taker_chosen_survey = Survey.find(chosen_survey)
-    Question.all.where(survey_id: taker_chosen_survey.id).each do |question|
-      puts "#{question.name}"
-      Response.all.where(question_id: question.id).each do |response|
-        puts "#{response.id}. #{response.name}"
-      end
-      puts "Enter the number of your choice:"
-      taker_response = gets.chomp
-      SurveyResponse.new(survey_taker_id: current_survey_taker.id, survey_id: taker_chosen_survey.id, question_id: question.id, response_id: taker_response)
-      puts "Response recorded!\n\n"
-    end
-    puts "Survey completed!\n\n"
-    puts "Press a to take another survey."
-    puts "Press m to return to the main menu."
-    puts "Press x to exit."
-
-    case gets.chomp
-    when 'a'
-      taker_menu
-    when 'm'
-      main_menu
-    when 'x'
-      exit
-    end
+  case gets.chomp
+  when 'a'
+    taker_menu
+  when 'm'
+    main_menu
+  when 'x'
+    exit
   end
 end
 
