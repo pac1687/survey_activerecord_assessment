@@ -21,6 +21,7 @@ def header
 end
 
 def main_menu
+  binding.pry
   header
   puts "Welcome the Survey System"
   puts "Enter 1 if you are a survey designer"
