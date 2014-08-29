@@ -62,17 +62,17 @@ def designer_menu
     create_response
   when '4'
     list_surveys
-    puts "Press any key to continue."
+    puts "Press Enter to continue."
     gets.chomp
     designer_menu
   when '5'
     list_questions
-    puts "Press any key to continue."
+    puts "Press Enter to continue."
     gets.chomp
     designer_menu
   when '6'
     list_responses
-    puts "Press any key to continue."
+    puts "Press Enter to continue."
     gets.chomp
     designer_menu
   when 'm'
