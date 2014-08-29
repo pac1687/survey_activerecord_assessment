@@ -4,6 +4,7 @@ class Response < ActiveRecord::Base
   has_many :survey_responses
   has_many :survey_takers, through: :survey_responses
   validates :name, :presence => true
+  scope :blue, -> { where(name: "Blue") }
 
 private
 
