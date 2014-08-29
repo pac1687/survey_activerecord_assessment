@@ -152,40 +152,6 @@ def create_question
       main_menu
     end
   end
-  # elsif @current_survey == nil
-  #   list_surveys
-  #   puts "Please select the survey you'd like to add questions to:"
-  #   selected_survey = gets.chomp
-  #   @current_survey = Survey.find(selected_survey)
-  #   puts "Current Survey: #{@current_survey.name}\n"
-  #   puts "Enter in the question you'd like to add to the current survey:\n"
-  #   name = gets.chomp
-  #   new_question = Question.create({name: name, survey_id: @current_survey.id})
-  #   puts "#{new_question.name} has been added to #{@current_survey.name}\n\n"
-  #   puts "Press y if you would like add another question."
-  #   puts "Press r if you would like to add a response to the question."
-  #   puts "Press d if you would like to return to the designer menu."
-  #   puts "Press m if you would like to return to the main menu."
-  #   puts "Press x to exit."
-
-  #   case gets.chomp
-  #   when 'y'
-  #     create_question
-  #   when 'r'
-  #     @current_question = Question.find(new_question.id)
-  #     create_response
-  #   when 'd'
-  #     @current_survey = nil
-  #     @current_question = nil
-  #     designer_menu
-  #   when 'm'
-  #     @current_survey = nil
-  #     @current_question = nil
-  #     main_menu
-  #   when 'x'
-  #     exit
-  #   end
-  # end
 end
 
 def create_response
@@ -194,6 +160,14 @@ def create_response
   whitespace
 
   if @current_question != nil
+    puts "Current question: #{@current_question.name}\n"
+  end
+
+  if @current_question ==nil
+    list_questions
+    puts "Please select the question you'd like to add responses to:"
+    selected_question = gets.chomp
+    @current_question = Question.find(selected_question)
     puts "Current question: #{@current_question.name}\n"
     puts "Enter in the response you'd like to add to the current question:\n"
     name = gets.chomp
@@ -214,35 +188,6 @@ def create_response
       @current_survey = nil
       @current_question = nil
       main_menu
-    end
-  elsif @current_question == nil
-    list_questions
-    puts "Please select the question you'd like to add responses to:"
-    selected_question = gets.chomp
-    @current_question = Question.find(selected_question)
-    puts "Current question: #{@current_question.name}\n"
-    puts "Enter in the response you'd like to add to the current question:\n"
-    name = gets.chomp
-    new_response = Response.create({name: name, question_id: @current_question.id})
-    puts "#{new_response.name} has been added to #{@current_question.name}\n\n"
-    puts "Press y if you would like add another response."
-    puts "Press d if you would like to return to the designer menu."
-    puts "Press m if you would like to return to the main menu."
-    puts "Press x to exit."
-
-    case gets.chomp
-    when 'y'
-      create_response
-    when 'd'
-      @current_survey= nil
-      @current_question = nil
-      designer_menu
-    when 'm'
-      @current_survey = nil
-      @current_question = nil
-      main_menu
-    when 'x'
-      exit
     end
   end
 end
