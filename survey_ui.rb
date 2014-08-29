@@ -7,6 +7,7 @@ Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file}
 
 @current_survey
 @current_question
+@current_survey_taker
 
 def whitespace
   puts "\n"
@@ -61,18 +62,18 @@ def designer_menu
     create_response
   when '4'
     list_surveys
-    gets.chomp
     puts "Press any key to continue."
+    gets.chomp
     designer_menu
   when '5'
     list_questions
-    gets.chomp
     puts "Press any key to continue."
+    gets.chomp
     designer_menu
   when '6'
     list_responses
-    gets.chomp
     puts "Press any key to continue."
+    gets.chomp
     designer_menu
   when 'm'
     main_menu
@@ -118,6 +119,14 @@ def create_question
 
   if @current_survey != nil
     puts "Current Survey: #{@current_survey.name}\n"
+  end
+
+  if @current_survey == nil
+    list_surveys
+    puts "Please select the survey you'd like to add questions to:"
+    selected_survey = gets.chomp
+    @current_survey = Survey.find(selected_survey)
+    puts "Current Survey: #{@current_survey.name}\n"
     puts "Enter in the question you'd like to add to the current survey:\n"
     name = gets.chomp
     new_question = Question.create({name: name, survey_id: @current_survey.id})
@@ -142,40 +151,41 @@ def create_question
       @current_question = nil
       main_menu
     end
-  elsif @current_survey == nil
-    list_surveys
-    puts "Please select the survey you'd like to add questions to:"
-    selected_survey = gets.chomp
-    @current_survey = Survey.find(selected_survey)
-    puts "Current Survey: #{@current_survey.name}\n"
-    puts "Enter in the question you'd like to add to the current survey:\n"
-    name = gets.chomp
-    new_question = Question.create({name: name, survey_id: @current_survey.id})
-    puts "#{new_question.name} has been added to #{@current_survey.name}\n\n"
-    puts "Press y if you would like add another question."
-    puts "Press r if you would like to add a response to the question."
-    puts "Press d if you would like to return to the designer menu."
-    puts "Press m if you would like to return to the main menu."
-    puts "Press x to exit."
-
-    case gets.chomp
-    when 'y'
-      create_question
-    when 'r'
-      @current_question = Question.find(new_question.id)
-      create_response
-    when 'd'
-      @current_survey = nil
-      @current_question = nil
-      designer_menu
-    when 'm'
-      @current_survey = nil
-      @current_question = nil
-      main_menu
-    when 'x'
-      exit
-    end
   end
+  # elsif @current_survey == nil
+  #   list_surveys
+  #   puts "Please select the survey you'd like to add questions to:"
+  #   selected_survey = gets.chomp
+  #   @current_survey = Survey.find(selected_survey)
+  #   puts "Current Survey: #{@current_survey.name}\n"
+  #   puts "Enter in the question you'd like to add to the current survey:\n"
+  #   name = gets.chomp
+  #   new_question = Question.create({name: name, survey_id: @current_survey.id})
+  #   puts "#{new_question.name} has been added to #{@current_survey.name}\n\n"
+  #   puts "Press y if you would like add another question."
+  #   puts "Press r if you would like to add a response to the question."
+  #   puts "Press d if you would like to return to the designer menu."
+  #   puts "Press m if you would like to return to the main menu."
+  #   puts "Press x to exit."
+
+  #   case gets.chomp
+  #   when 'y'
+  #     create_question
+  #   when 'r'
+  #     @current_question = Question.find(new_question.id)
+  #     create_response
+  #   when 'd'
+  #     @current_survey = nil
+  #     @current_question = nil
+  #     designer_menu
+  #   when 'm'
+  #     @current_survey = nil
+  #     @current_question = nil
+  #     main_menu
+  #   when 'x'
+  #     exit
+  #   end
+  # end
 end
 
 def create_response
@@ -258,6 +268,47 @@ def list_responses
   puts "All Responses:"
   Response.all.each do |response|
     puts "#{response.id}.  #{response.name} to Question: #{response.question.name} in Survey: #{response.question.survey.name}"
+  end
+end
+
+def taker_menu
+  header
+  puts "Survey Taker Menu"
+  whitespace
+
+  if @current_survey_taker == nil
+    puts "Please enter your name:"
+    @current_survey_taker = SurveyTaker.find_or_create_by(name: gets.chomp)
+  end
+
+  if @current_survey_taker != nil
+    puts "Choose a survey to take:"
+    list_surveys
+    chosen_survey = gets.chomp
+    taker_chosen_survey = Survey.find(chosen_survey)
+    Question.all.where(survey_id: taker_chosen_survey.id).each do |question|
+      puts "#{question.name}"
+      Response.all.where(question_id: question.id).each do |response|
+        puts "#{response.id}. #{response.name}"
+      end
+      puts "Enter the number of your choice:"
+      taker_response = gets.chomp
+      SurveyResponse.new(survey_taker_id: current_survey_taker.id, survey_id: taker_chosen_survey.id, question_id: question.id, response_id: taker_response)
+      puts "Response recorded!\n\n"
+    end
+    puts "Survey completed!\n\n"
+    puts "Press a to take another survey."
+    puts "Press m to return to the main menu."
+    puts "Press x to exit."
+
+    case gets.chomp
+    when 'a'
+      taker_menu
+    when 'm'
+      main_menu
+    when 'x'
+      exit
+    end
   end
 end
 
