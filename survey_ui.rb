@@ -22,7 +22,7 @@ end
 
 def main_menu
   header
-  puts "Welcome the Survey System"
+  puts "Welcome to the Survey System"
   puts "Enter 1 if you are a survey designer"
   puts "Enter 2 if you are a survey taker"
   puts "Enter x to exit the system"
